@@ -17,7 +17,7 @@ def create_gpg_key(output_command):
 
 def export_pubkey(path, gpgkey, output_command):
     key_path = os.path.join(path, 'keyfile')
-    cmd = "/usr/bin/gpg --yes --output %s --armor --export %s" % (
+    cmd = "/usr/bin/gpg --digest-algo SHA256 --yes --output %s --armor --export %s" % (
         key_path, gpgkey)
     subprocess.check_output(cmd, shell=True)
     output_command("Exported key %s to %s" % (gpgkey, key_path))
@@ -74,7 +74,7 @@ def create_signed_releases_index(path, gpgkey, output_command):
         "/usr/bin/apt-ftparchive release . > Release", shell=True, cwd=path)
     output_command("Create InRelease with key %s" % gpgkey)
     subprocess.check_output(
-        "/usr/bin/gpg --yes -u 0x%s --clearsign -o InRelease Release" % (
+        "/usr/bin/gpg --digest-algo SHA256 --yes -u 0x%s --clearsign -o InRelease Release" % (
             gpgkey), shell=True, cwd=path)
     output_command("Create Releases.gpg with key %s" % gpgkey)
     subprocess.check_output(
