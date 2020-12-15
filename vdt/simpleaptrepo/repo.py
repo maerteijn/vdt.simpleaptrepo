@@ -34,7 +34,7 @@ def sign_packages(path, gpgkey, skip_signed, output_command):
             # but still could have run succesful
             output = e.output
 
-        if "_gpgbuilder" in output:
+        if b"_gpgbuilder" in output:
 
             if skip_signed:
                 output_command("Skipped signing %s" % deb_file)
