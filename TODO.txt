@@ -1,4 +1,0 @@
-- test with python 3.5
-- add unittests
-- add coverage.io
-- add to travis

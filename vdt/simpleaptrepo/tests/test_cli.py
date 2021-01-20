@@ -1,7 +1,4 @@
-try:
-    import ConfigParser  # python 2
-except:
-    import configparser as ConfigParser  # python 3
+import configparser as ConfigParser
 
 import os
 import shutil
@@ -29,8 +26,9 @@ Now add a component with the 'add-component' command
 """
 
 CREATE_REPO_NO_PARAMS_OUTPUT = """Usage: create-repo [OPTIONS] NAME [PATH]
+Try 'create-repo --help' for help.
 
-Error: Missing argument "name".
+Error: Missing argument 'NAME'.
 """
 
 LIST_REPOS_OUTPUT = """my_repo (gpgkey: 123456)
@@ -47,7 +45,6 @@ Create Releases.gpg with key 123456
 
 
 class TestCLI(unittest.TestCase):
-
     def setUp(self):
         # patch the aptrepo instance to write the file to the current
         # directory, re-read the sections
@@ -68,7 +65,7 @@ class TestCLI(unittest.TestCase):
 
         cli.apt_repo.config = ConfigParser.ConfigParser()
 
-    @mock.patch('subprocess.check_output', return_value="GPG OUTPUT")
+    @mock.patch("subprocess.check_output", return_value="GPG OUTPUT")
     def test_create_gpg_key(self, mock_subprocess):
         runner = CliRunner()
         result = runner.invoke(cli.create_key)
@@ -80,7 +77,7 @@ class TestCLI(unittest.TestCase):
         # click's output should be captured correctly
         self.assertEqual(result.output, GPG_KEY_OUTPUT)
 
-    @mock.patch('subprocess.check_output', side_effect=ValueError('GPG ERROR'))
+    @mock.patch("subprocess.check_output", side_effect=ValueError("GPG ERROR"))
     def test_create_gpg_key_exception(self, mock_subprocess):
         runner = CliRunner()
         result = runner.invoke(cli.create_key)
@@ -96,8 +93,7 @@ class TestCLI(unittest.TestCase):
         runner = CliRunner()
 
         with runner.isolated_filesystem():
-            result = runner.invoke(
-                cli.create_repo, ["my_repo", "--gpgkey", "123456"])
+            result = runner.invoke(cli.create_repo, ["my_repo", "--gpgkey", "123456"])
 
             # command should be run without error
             self.assertEqual(result.exit_code, 0)
@@ -112,19 +108,19 @@ class TestCLI(unittest.TestCase):
             self.assertTrue(os.path.exists(cli.apt_repo.path))
 
             # now create a component
-            result = runner.invoke(
-                cli.add_component, ["my_repo", "main"])
+            result = runner.invoke(cli.add_component, ["my_repo", "main"])
 
             # command should be run without error
             self.assertEqual(result.exit_code, 0)
 
             # click's output should be captured correctly
             self.assertTrue(
-                "Add http://<hostname>/my_repo/main / to your sources.list" in result.output)  # noqa
+                "Add http://<hostname>/my_repo/main / to your sources.list"
+                in result.output
+            )  # noqa
 
             # adding the same component should raise an error
-            result = runner.invoke(
-                cli.add_component, ["my_repo", "main"])
+            result = runner.invoke(cli.add_component, ["my_repo", "main"])
 
             self.assertEqual(result.exit_code, 2)
             self.assertTrue("already exists!" in result.output)
@@ -136,21 +132,21 @@ class TestCLI(unittest.TestCase):
             self.assertTrue(os.path.exists("another_repo"))
 
             # now create a component
-            result = runner.invoke(
-                cli.add_component, ["another_repo", "main"])
+            result = runner.invoke(cli.add_component, ["another_repo", "main"])
 
             # command should be run without error
             self.assertEqual(result.exit_code, 0)
 
             # click's output should be captured correctly
             self.assertTrue(
-                "Add http://<hostname>/another_repo/main / to your sources.list" in result.output)  # noqa
+                "Add http://<hostname>/another_repo/main / to your sources.list"
+                in result.output
+            )  # noqa
 
     def test_create_repo_unkown_path(self):
         runner = CliRunner()
         with runner.isolated_filesystem():
-            result = runner.invoke(
-                cli.create_repo, ["my_repo", "/unknown/path/"])
+            result = runner.invoke(cli.create_repo, ["my_repo", "/unknown/path/"])
 
             # there is an error as the path is unknown
             self.assertEqual(result.exit_code, 2)
@@ -171,8 +167,7 @@ class TestCLI(unittest.TestCase):
 
         # create a repo and a component
         with runner.isolated_filesystem():
-            result = runner.invoke(
-                cli.create_repo, ["my_repo", "--gpgkey", "123456"])
+            result = runner.invoke(cli.create_repo, ["my_repo", "--gpgkey", "123456"])
             self.assertEqual(result.exit_code, 0)
             result = runner.invoke(cli.add_component, ["my_repo", "main"])
             self.assertEqual(result.exit_code, 0)
@@ -182,28 +177,24 @@ class TestCLI(unittest.TestCase):
             self.assertEqual(result.exit_code, 0)
             self.assertEqual(result.output, LIST_REPOS_OUTPUT)
 
-    @mock.patch('subprocess.check_output', return_value="Mocked output")
-    def test_update_repo(self, mock_subprocess=None):
+    @mock.patch("subprocess.check_output", return_value="Mocked output")
+    def test_update_repo(self, mock_subprocess=None):  # pylint: disable=W0613
         runner = CliRunner()
 
         with runner.isolated_filesystem():
             # create a repo and a component
-            result = runner.invoke(
-                cli.create_repo, ["my_repo", "--gpgkey", "123456"])
+            result = runner.invoke(cli.create_repo, ["my_repo", "--gpgkey", "123456"])
             self.assertEqual(result.exit_code, 0)
             result = runner.invoke(cli.add_component, ["my_repo", "main"])
             self.assertEqual(result.exit_code, 0)
 
             # we mock everything, however, the runner still should say that
             # everything is created / updated
-            result = runner.invoke(
-                cli.update_repo, ["my_repo", "main"])
+            result = runner.invoke(cli.update_repo, ["my_repo", "main"])
             self.assertEqual(result.exit_code, 0)
             self.assertIn(UPDATE_REPO_OUTPUT, result.output)
 
             # Let's update an component which does not exist
-            result = runner.invoke(
-                cli.update_repo, ["my_repo", "i-am-not-there"])
+            result = runner.invoke(cli.update_repo, ["my_repo", "i-am-not-there"])
             self.assertEqual(result.exit_code, 2)
-            self.assertIn(
-                "Component 'i-am-not-there' does not exist!", result.output)
+            self.assertIn("Component 'i-am-not-there' does not exist!", result.output)

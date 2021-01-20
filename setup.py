@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.0.5"
+__version__ = "1.0.0"
 
 
 setup(
@@ -14,19 +14,18 @@ setup(
         'License :: OSI Approved :: BSD License',
         'Operating System :: Unix',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     keywords='',
     author='Martijn Jacobs',
-    author_email='martijn@devopsconsulting.nl',
+    author_email='maerteijn@gmail.com',
     url='https://github.com/devopsconsulting/vdt.simpleaptrepo',
-    license='BSD',
+    license='MIT',
     # include all packages in the egg, except the test package.
     packages=find_packages(
         exclude=['ez_setup', 'examples', '*tests']),
@@ -48,5 +47,7 @@ setup(
     # mark test target to require extras.
     extras_require={
         'dev': ['nose', 'coverage', 'mock', 'twine'],
+        'lint': ['black', 'pylint'],
     },
+    python_requires='>=3.5',
 )

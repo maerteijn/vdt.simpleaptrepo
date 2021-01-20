@@ -1,7 +1,0 @@
-version: '3'
-services:
-  simpaltrepo-test:
-    image: maerteijn/simpeapt-test-image
-    volumes:
-    - ..:/usr/local/src
-    entrypoint: ./docker/entrypoint.sh

@@ -1,7 +1,4 @@
-try:
-    import ConfigParser  # python 2
-except:
-    import configparser as ConfigParser  # python 3
+import configparser as ConfigParser
 
 import os
 
@@ -22,10 +19,10 @@ class Config(object):
         if not self.config.has_section(name):
             self.config.add_section(name)
 
-        self.config.set(name, 'path', path)
+        self.config.set(name, "path", path)
 
         if gpgkey:
-            self.config.set(name, 'gpgkey', gpgkey)
+            self.config.set(name, "gpgkey", gpgkey)
 
         self.save_config()
 

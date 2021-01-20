@@ -2,7 +2,7 @@
 vdt.simpleaptrepo
 =================
 
-Simple command line tool to create apt repositories. This will work on debian and ubuntu.
+Simple command line tool to create apt repositories. This will work on debian and ubuntu. Requires `python>=3.5`
 
 .. image:: https://api.travis-ci.org/devopsconsulting/vdt.simpleaptrepo.svg?branch=master
     :target: https://travis-ci.org/devopsconsulting/vdt.simpleaptrepo
@@ -58,7 +58,7 @@ You will see what you need to do now::
 
     Configure your webservice to set the www-root to /www/
     Add http://<hostname>/myrepo/test / to your sources.list
-    
+
     Add the key on the host where you want to install the packages.
     (This is only needed once per repository)
     wget -qO - http://<hostname>/myrepo/test/keyfile | sudo apt-key add -
@@ -71,7 +71,7 @@ Add some more if you like::
 See that our repo is there::
 
     simpleapt list-repos
-    
+
     myrepo (gpgkey: 10FB8BDC)
        test
        staging
